@@ -1,0 +1,531 @@
+{
+  "salesOrderStatus": {
+    "DRAFT": {
+      "code": "DRAFT",
+      "label": "Draft",
+      "labelEn": "Draft",
+      "description": "Pesanan masih draft, dapat diedit",
+      "color": "#F59E0B",
+      "textColor": "#FFFFFF",
+      "icon": "📝",
+      "sortOrder": 1
+    },
+    "CONFIRMED": {
+      "code": "CONFIRMED",
+      "label": "Dikonfirmasi",
+      "labelEn": "Confirmed",
+      "description": "Pesanan dikonfirmasi, siap produksi",
+      "color": "#3B82F6",
+      "textColor": "#FFFFFF",
+      "icon": "✅",
+      "sortOrder": 2
+    },
+    "IN_PRODUCTION": {
+      "code": "IN_PRODUCTION",
+      "label": "Dalam Produksi",
+      "labelEn": "In Production",
+      "description": "Sedang diproduksi",
+      "color": "#8B5CF6",
+      "textColor": "#FFFFFF",
+      "icon": "🏭",
+      "sortOrder": 3
+    },
+    "READY": {
+      "code": "READY",
+      "label": "Siap Kirim",
+      "labelEn": "Ready",
+      "description": "Siap untuk dikirim",
+      "color": "#22C55E",
+      "textColor": "#FFFFFF",
+      "icon": "📦",
+      "sortOrder": 4
+    },
+    "PARTIALLY_DELIVERED": {
+      "code": "PARTIALLY_DELIVERED",
+      "label": "Terkirim Sebagian",
+      "labelEn": "Partially Delivered",
+      "description": "Sebagian item sudah dikirim",
+      "color": "#F97316",
+      "textColor": "#FFFFFF",
+      "icon": "📦",
+      "sortOrder": 5
+    },
+    "DELIVERED": {
+      "code": "DELIVERED",
+      "label": "Terkirim",
+      "labelEn": "Delivered",
+      "description": "Semua item sudah dikirim",
+      "color": "#10B981",
+      "textColor": "#FFFFFF",
+      "icon": "✅",
+      "sortOrder": 6
+    },
+    "COMPLETED": {
+      "code": "COMPLETED",
+      "label": "Selesai",
+      "labelEn": "Completed",
+      "description": "Lunas dan terkirim semua",
+      "color": "#059669",
+      "textColor": "#FFFFFF",
+      "icon": "✅",
+      "sortOrder": 7
+    },
+    "CANCELLED": {
+      "code": "CANCELLED",
+      "label": "Dibatalkan",
+      "labelEn": "Cancelled",
+      "description": "Pesanan dibatalkan",
+      "color": "#EF4444",
+      "textColor": "#FFFFFF",
+      "icon": "❌",
+      "sortOrder": 8
+    }
+  },
+  "productionTaskStatus": {
+    "PENDING": {
+      "code": "PENDING",
+      "label": "Menunggu",
+      "labelEn": "Pending",
+      "description": "Terjadwal, belum dimulai",
+      "color": "#F59E0B",
+      "textColor": "#FFFFFF",
+      "icon": "⏳",
+      "sortOrder": 1
+    },
+    "QUEUED": {
+      "code": "QUEUED",
+      "label": "Antrian",
+      "labelEn": "Queued",
+      "description": "Dalam antrian (tampilan dapur)",
+      "color": "#F97316",
+      "textColor": "#FFFFFF",
+      "icon": "📋",
+      "sortOrder": 2
+    },
+    "IN_PROGRESS": {
+      "code": "IN_PROGRESS",
+      "label": "Sedang Dikerjakan",
+      "labelEn": "In Progress",
+      "description": "Sedang dalam pengerjaan",
+      "color": "#3B82F6",
+      "textColor": "#FFFFFF",
+      "icon": "⚙️",
+      "sortOrder": 3
+    },
+    "COMPLETED": {
+      "code": "COMPLETED",
+      "label": "Selesai",
+      "labelEn": "Completed",
+      "description": "Selesai dengan sukses",
+      "color": "#10B981",
+      "textColor": "#FFFFFF",
+      "icon": "✅",
+      "sortOrder": 4
+    },
+    "CANCELLED": {
+      "code": "CANCELLED",
+      "label": "Dibatalkan",
+      "labelEn": "Cancelled",
+      "description": "Dibatalkan",
+      "color": "#EF4444",
+      "textColor": "#FFFFFF",
+      "icon": "❌",
+      "sortOrder": 5
+    }
+  },
+  "deliveryStatus": {
+    "PENDING": {
+      "code": "PENDING",
+      "label": "Menunggu",
+      "labelEn": "Pending",
+      "description": "Terjadwal tapi belum dikirim",
+      "color": "#F59E0B",
+      "textColor": "#FFFFFF",
+      "icon": "📦"
+    },
+    "IN_TRANSIT": {
+      "code": "IN_TRANSIT",
+      "label": "Dalam Perjalanan",
+      "labelEn": "In Transit",
+      "description": "Sedang dalam perjalanan ke pelanggan",
+      "color": "#3B82F6",
+      "textColor": "#FFFFFF",
+      "icon": "🚚"
+    },
+    "DELIVERED": {
+      "code": "DELIVERED",
+      "label": "Terkirim",
+      "labelEn": "Delivered",
+      "description": "Berhasil dikirim",
+      "color": "#10B981",
+      "textColor": "#FFFFFF",
+      "icon": "✅"
+    },
+    "FAILED": {
+      "code": "FAILED",
+      "label": "Gagal",
+      "labelEn": "Failed",
+      "description": "Pengiriman gagal",
+      "color": "#EF4444",
+      "textColor": "#FFFFFF",
+      "icon": "❌"
+    },
+    "CANCELLED": {
+      "code": "CANCELLED",
+      "label": "Dibatalkan",
+      "labelEn": "Cancelled",
+      "description": "Pengiriman dibatalkan",
+      "color": "#6B7280",
+      "textColor": "#FFFFFF",
+      "icon": "🚫"
+    }
+  },
+  "paymentStatus": {
+    "PENDING": {
+      "code": "PENDING",
+      "label": "Menunggu",
+      "labelEn": "Pending",
+      "description": "Pembayaran diharapkan tapi belum diterima",
+      "color": "#F59E0B",
+      "textColor": "#FFFFFF",
+      "icon": "⏳"
+    },
+    "CONFIRMED": {
+      "code": "CONFIRMED",
+      "label": "Terkonfirmasi",
+      "labelEn": "Confirmed",
+      "description": "Pembayaran diterima dan dikonfirmasi",
+      "color": "#10B981",
+      "textColor": "#FFFFFF",
+      "icon": "✅"
+    },
+    "PARTIAL": {
+      "code": "PARTIAL",
+      "label": "Sebagian",
+      "labelEn": "Partial",
+      "description": "Pembayaran sebagian diterima",
+      "color": "#F97316",
+      "textColor": "#FFFFFF",
+      "icon": "💰"
+    },
+    "REFUNDED": {
+      "code": "REFUNDED",
+      "label": "Dikembalikan",
+      "labelEn": "Refunded",
+      "description": "Pembayaran dikembalikan",
+      "color": "#3B82F6",
+      "textColor": "#FFFFFF",
+      "icon": "↩️"
+    },
+    "CANCELLED": {
+      "code": "CANCELLED",
+      "label": "Dibatalkan",
+      "labelEn": "Cancelled",
+      "description": "Pembayaran dibatalkan",
+      "color": "#EF4444",
+      "textColor": "#FFFFFF",
+      "icon": "❌"
+    }
+  },
+  "paymentMethods": {
+    "CASH": {
+      "code": "CASH",
+      "label": "Tunai",
+      "labelEn": "Cash",
+      "description": "Pembayaran tunai",
+      "icon": "💵"
+    },
+    "TRANSFER": {
+      "code": "TRANSFER",
+      "label": "Transfer Bank",
+      "labelEn": "Bank Transfer",
+      "description": "Transfer bank",
+      "icon": "🏦"
+    },
+    "CARD": {
+      "code": "CARD",
+      "label": "Kartu Kredit/Debit",
+      "labelEn": "Credit/Debit Card",
+      "description": "Kartu kredit/debit",
+      "icon": "💳"
+    },
+    "QRIS": {
+      "code": "QRIS",
+      "label": "QRIS",
+      "labelEn": "QRIS",
+      "description": "Pembayaran QRIS",
+      "icon": "📱"
+    },
+    "E_WALLET": {
+      "code": "E_WALLET",
+      "label": "Dompet Digital",
+      "labelEn": "E-Wallet",
+      "description": "E-wallet (GoPay, OVO, DANA, dll)",
+      "icon": "📲"
+    },
+    "COD": {
+      "code": "COD",
+      "label": "Bayar di Tempat",
+      "labelEn": "Cash on Delivery",
+      "description": "Cash on delivery",
+      "icon": "🚚"
+    },
+    "CREDIT": {
+      "code": "CREDIT",
+      "label": "Kredit",
+      "labelEn": "Credit",
+      "description": "Termin kredit",
+      "icon": "📄"
+    }
+  },
+  "paymentTerms": {
+    "IMMEDIATE": {
+      "code": "IMMEDIATE",
+      "label": "Segera",
+      "labelEn": "Immediate",
+      "description": "Bayar segera",
+      "days": 0
+    },
+    "NET_7": {
+      "code": "NET_7",
+      "label": "Net 7 Hari",
+      "labelEn": "Net 7 Days",
+      "description": "Jatuh tempo 7 hari",
+      "days": 7
+    },
+    "NET_14": {
+      "code": "NET_14",
+      "label": "Net 14 Hari",
+      "labelEn": "Net 14 Days",
+      "description": "Jatuh tempo 14 hari",
+      "days": 14
+    },
+    "NET_30": {
+      "code": "NET_30",
+      "label": "Net 30 Hari",
+      "labelEn": "Net 30 Days",
+      "description": "Jatuh tempo 30 hari",
+      "days": 30
+    },
+    "NET_45": {
+      "code": "NET_45",
+      "label": "Net 45 Hari",
+      "labelEn": "Net 45 Days",
+      "description": "Jatuh tempo 45 hari",
+      "days": 45
+    },
+    "NET_60": {
+      "code": "NET_60",
+      "label": "Net 60 Hari",
+      "labelEn": "Net 60 Days",
+      "description": "Jatuh tempo 60 hari",
+      "days": 60
+    },
+    "COD": {
+      "code": "COD",
+      "label": "Bayar di Tempat",
+      "labelEn": "Cash on Delivery",
+      "description": "Cash on delivery",
+      "days": 0
+    },
+    "CUSTOM": {
+      "code": "CUSTOM",
+      "label": "Kustom",
+      "labelEn": "Custom",
+      "description": "Termin pembayaran kustom",
+      "days": null
+    }
+  },
+  "productionSourceTypes": {
+    "STOCK": {
+      "code": "STOCK",
+      "label": "Stok",
+      "labelEn": "Stock",
+      "description": "Pengisian ulang stok",
+      "icon": "📦"
+    },
+    "POS_ORDER": {
+      "code": "POS_ORDER",
+      "label": "Pesanan POS",
+      "labelEn": "POS Order",
+      "description": "Pesanan pelanggan POS",
+      "icon": "🛒"
+    },
+    "SALES_ORDER": {
+      "code": "SALES_ORDER",
+      "label": "Pesanan Penjualan",
+      "labelEn": "Sales Order",
+      "description": "Pesanan penjualan",
+      "icon": "📋"
+    },
+    "MANUAL": {
+      "code": "MANUAL",
+      "label": "Manual",
+      "labelEn": "Manual",
+      "description": "Produksi manual",
+      "icon": "✍️"
+    }
+  },
+  "productionTaskTypes": {
+    "KITCHEN": {
+      "code": "KITCHEN",
+      "label": "Dapur",
+      "labelEn": "Kitchen",
+      "description": "Memasak F&B",
+      "icon": "🍳"
+    },
+    "BAR": {
+      "code": "BAR",
+      "label": "Bar",
+      "labelEn": "Bar",
+      "description": "Minuman",
+      "icon": "🍹"
+    },
+    "COFFEE": {
+      "code": "COFFEE",
+      "label": "Kopi",
+      "labelEn": "Coffee",
+      "description": "Stasiun kopi",
+      "icon": "☕"
+    },
+    "ASSEMBLY": {
+      "code": "ASSEMBLY",
+      "label": "Perakitan",
+      "labelEn": "Assembly",
+      "description": "Perakitan/manufaktur",
+      "icon": "🔧"
+    },
+    "PREP": {
+      "code": "PREP",
+      "label": "Persiapan",
+      "labelEn": "Preparation",
+      "description": "Persiapan bahan",
+      "icon": "🔪"
+    },
+    "BULK": {
+      "code": "BULK",
+      "label": "Produksi Massal",
+      "labelEn": "Bulk Production",
+      "description": "Produksi massal",
+      "icon": "🏭"
+    },
+    "CUSTOM": {
+      "code": "CUSTOM",
+      "label": "Kustom",
+      "labelEn": "Custom",
+      "description": "Pesanan kustom",
+      "icon": "⚙️"
+    }
+  },
+  "productionTypes": {
+    "COOKING": {
+      "code": "COOKING",
+      "label": "Memasak",
+      "labelEn": "Cooking",
+      "description": "Memasak/persiapan F&B",
+      "icon": "tabler-grill"
+    },
+    "ASSEMBLY": {
+      "code": "ASSEMBLY",
+      "label": "Perakitan",
+      "labelEn": "Assembly",
+      "description": "Perakitan/manufaktur",
+      "icon": "tabler-package-export"
+    },
+    "PROCESSING": {
+      "code": "PROCESSING",
+      "label": "Pengolahan",
+      "labelEn": "Processing",
+      "description": "Pengolahan makanan",
+      "icon": "tabler-settings"
+    },
+    "PACKAGING": {
+      "code": "PACKAGING",
+      "label": "Pengemasan",
+      "labelEn": "Packaging",
+      "description": "Operasi pengemasan",
+      "icon": "tabler-box"
+    },
+    "DISASSEMBLY": {
+      "code": "DISASSEMBLY",
+      "label": "Pembongkaran",
+      "labelEn": "Disassembly",
+      "description": "Memecah (mis. ayam utuh → bagian)",
+      "icon": "tabler-package-import"
+    }
+  },
+  "stationTypes": {
+    "KITCHEN": {
+      "code": "KITCHEN",
+      "label": "Dapur Utama",
+      "labelEn": "Main Kitchen",
+      "description": "Dapur utama",
+      "icon": "🍳"
+    },
+    "BAR": {
+      "code": "BAR",
+      "label": "Stasiun Bar",
+      "labelEn": "Bar Station",
+      "description": "Stasiun bar",
+      "icon": "🍹"
+    },
+    "COFFEE": {
+      "code": "COFFEE",
+      "label": "Stasiun Kopi",
+      "labelEn": "Coffee Station",
+      "description": "Stasiun kopi",
+      "icon": "☕"
+    },
+    "GRILL": {
+      "code": "GRILL",
+      "label": "Stasiun Grill",
+      "labelEn": "Grill Station",
+      "description": "Stasiun grill",
+      "icon": "🔥"
+    },
+    "PASTRY": {
+      "code": "PASTRY",
+      "label": "Stasiun Pastry",
+      "labelEn": "Pastry Station",
+      "description": "Stasiun pastry/bakery",
+      "icon": "🥐"
+    },
+    "PREP": {
+      "code": "PREP",
+      "label": "Stasiun Persiapan",
+      "labelEn": "Prep Station",
+      "description": "Stasiun persiapan",
+      "icon": "🔪"
+    },
+    "ASSEMBLY": {
+      "code": "ASSEMBLY",
+      "label": "Lini Perakitan",
+      "labelEn": "Assembly Line",
+      "description": "Lini perakitan",
+      "icon": "🏭"
+    }
+  },
+  "customerTypes": {
+    "INDIVIDUAL": {
+      "code": "INDIVIDUAL",
+      "label": "Perorangan",
+      "labelEn": "Individual",
+      "description": "Pelanggan perorangan",
+      "icon": "👤"
+    },
+    "CORPORATE": {
+      "code": "CORPORATE",
+      "label": "Perusahaan",
+      "labelEn": "Corporate",
+      "description": "Pelanggan perusahaan",
+      "icon": "🏢"
+    },
+    "RESELLER": {
+      "code": "RESELLER",
+      "label": "Reseller",
+      "labelEn": "Reseller",
+      "description": "Reseller/distributor",
+      "icon": "🏪"
+    }
+  }
+}
