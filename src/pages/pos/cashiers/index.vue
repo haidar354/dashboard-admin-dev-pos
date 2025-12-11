@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 definePage({
@@ -41,15 +41,18 @@ const cashiers = ref([
 ])
 
 const filteredCashiers = computed(() => {
-  if (!searchQuery.value) return cashiers.value
-  return cashiers.value.filter(cashier => 
-    cashier.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  if (!searchQuery.value)
+    return cashiers.value
+
+  return cashiers.value.filter(cashier =>
+    cashier.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
 })
 
 const selectCashier = (cashier: any) => {
   // Simpan kasir yang dipilih
   localStorage.setItem('selectedCashier', JSON.stringify(cashier))
+
   // Navigate ke halaman login kasir
   router.push('/pos/cashiers/login')
 }
@@ -63,7 +66,8 @@ onMounted(() => {
   const outlet = localStorage.getItem('selectedOutlet')
   if (outlet) {
     selectedOutlet.value = JSON.parse(outlet)
-  } else {
+  }
+  else {
     // Jika tidak ada outlet yang dipilih, redirect ke halaman pilih outlet
     router.push('/pos')
   }
@@ -84,7 +88,6 @@ onMounted(() => {
             <VIcon
               icon="tabler-building-store"
               size="48"
-              color="primary"
             />
           </VAvatar>
           <h2 class="text-h4 font-weight-bold text-white mb-2">
@@ -214,7 +217,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: 2rem;
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;

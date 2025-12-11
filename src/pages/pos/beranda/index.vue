@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PosSidebar from '../components/PosSidebar.vue'
 
 definePage({
   meta: {
@@ -18,29 +19,31 @@ setInterval(() => {
 }, 1000)
 
 const formattedTime = computed(() => {
-  return currentTime.value.toLocaleTimeString('id-ID', { 
-    hour: '2-digit', 
+  return currentTime.value.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit' 
+    second: '2-digit',
   })
 })
 
 const formattedDate = computed(() => {
-  return currentTime.value.toLocaleDateString('id-ID', { 
-    weekday: 'long', 
+  return currentTime.value.toLocaleDateString('id-ID', {
+    weekday: 'long',
     day: 'numeric',
-    month: 'long', 
-    year: 'numeric' 
+    month: 'long',
+    year: 'numeric',
   })
 })
 
 const formattedCash = computed(() => {
-  if (!currentShift.value?.startCash) return 'Rp 0'
-  return new Intl.NumberFormat('id-ID', { 
-    style: 'currency', 
+  if (!currentShift.value?.startCash)
+    return 'Rp 0'
+
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
     currency: 'IDR',
-    minimumFractionDigits: 0 
-  }).format(parseInt(currentShift.value.startCash))
+    minimumFractionDigits: 0,
+  }).format(Number.parseInt(currentShift.value.startCash))
 })
 
 // Dummy data statistik
@@ -86,7 +89,7 @@ const logout = () => {
   localStorage.removeItem('currentShift')
   localStorage.removeItem('selectedCashier')
   localStorage.removeItem('selectedOutlet')
-  
+
   // Redirect ke halaman pilih outlet
   router.push('/pos')
 }
@@ -95,134 +98,34 @@ const goToPOS = () => {
   router.push('/pos/posProduct')
 }
 
+const goToTransaksi = () => {
+  router.push('/pos/transaksi')
+}
+
+const goToProduk = () => {
+  router.push('/pos/produk')
+}
+
+const goToKategori = () => {
+  router.push('/pos/kategori')
+}
+
+const goToSatuan = () => {
+  router.push('/pos/satuan')
+}
+
 onMounted(() => {
   // Load current shift data
   const shift = localStorage.getItem('currentShift')
-  
-  if (shift) {
+
+  if (shift)
     currentShift.value = JSON.parse(shift)
-  }
 })
 </script>
 
 <template>
   <div class="pos-beranda">
-    <!-- Sidebar -->
-    <div class="pos-sidebar">
-      <div class="sidebar-header">
-        <VAvatar
-          size="48"
-          color="primary"
-          class="mb-2"
-        >
-          <VIcon
-            icon="tabler-building-store"
-            size="28"
-          />
-        </VAvatar>
-      </div>
-
-      <div class="sidebar-menu">
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="flat"
-              color="primary"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-home" />
-            </VBtn>
-          </template>
-          <span>Beranda</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-              @click="goToPOS"
-            >
-              <VIcon icon="tabler-receipt" />
-            </VBtn>
-          </template>
-          <span>POS</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-list" />
-            </VBtn>
-          </template>
-          <span>Transaksi</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-package" />
-            </VBtn>
-          </template>
-          <span>Pengeluaran</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-box" />
-            </VBtn>
-          </template>
-          <span>Produk</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-settings" />
-            </VBtn>
-          </template>
-          <span>Settings</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-user" />
-            </VBtn>
-          </template>
-          <span>Profil</span>
-        </VTooltip>
-      </div>
-    </div>
+    <PosSidebar active-page="beranda" />
 
     <!-- Main Content -->
     <div class="pos-main">
@@ -296,7 +199,7 @@ onMounted(() => {
                       </h3>
                     </div>
                     <VAvatar
-                      color="success"
+                      color="primary"
                       variant="tonal"
                       size="56"
                     >
@@ -331,7 +234,7 @@ onMounted(() => {
                       size="56"
                     >
                       <VIcon
-                        icon="tabler-receipt"
+                        icon="tabler-cash"
                         size="32"
                       />
                     </VAvatar>
@@ -356,7 +259,7 @@ onMounted(() => {
                       </h3>
                     </div>
                     <VAvatar
-                      color="success"
+                      color="info"
                       variant="tonal"
                       size="56"
                     >
@@ -386,7 +289,7 @@ onMounted(() => {
                       </h3>
                     </div>
                     <VAvatar
-                      color="success"
+                      color="warning"
                       variant="tonal"
                       size="56"
                     >
@@ -557,31 +460,6 @@ onMounted(() => {
   background-color: #f5f5f9;
 }
 
-.pos-sidebar {
-  width: 72px;
-  background: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
-
-  .sidebar-header {
-    margin-bottom: 2rem;
-  }
-
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
 .pos-main {
   flex: 1;
   margin-left: 72px;
@@ -608,7 +486,7 @@ onMounted(() => {
 .stat-card {
   height: 100%;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
@@ -622,7 +500,7 @@ onMounted(() => {
 .product-card {
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

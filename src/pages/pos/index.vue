@@ -37,15 +37,18 @@ const outlets = ref([
 ])
 
 const filteredOutlets = computed(() => {
-  if (!searchQuery.value) return outlets.value
-  return outlets.value.filter(outlet => 
-    outlet.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  if (!searchQuery.value)
+    return outlets.value
+
+  return outlets.value.filter(outlet =>
+    outlet.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
 })
 
 const selectOutlet = (outlet: any) => {
   // Simpan outlet yang dipilih ke localStorage atau store
   localStorage.setItem('selectedOutlet', JSON.stringify(outlet))
+
   // Navigate ke halaman pilih kasir
   router.push('/pos/cashiers')
 }
@@ -65,7 +68,6 @@ const selectOutlet = (outlet: any) => {
             <VIcon
               icon="tabler-building-store"
               size="48"
-              color="primary"
             />
           </VAvatar>
           <h2 class="text-h4 font-weight-bold text-white mb-2">
@@ -96,7 +98,6 @@ const selectOutlet = (outlet: any) => {
               <VIcon
                 icon="tabler-building-store"
                 size="28"
-                color="primary"
                 class="me-2"
               />
               <h1 class="text-h5 font-weight-bold">
@@ -189,7 +190,7 @@ const selectOutlet = (outlet: any) => {
   justify-content: space-between;
   padding: 2rem;
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;

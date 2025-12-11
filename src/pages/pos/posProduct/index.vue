@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import PosSidebar from '../components/PosSidebar.vue'
 
 definePage({
   meta: {
@@ -8,7 +8,6 @@ definePage({
   },
 })
 
-const router = useRouter()
 const searchQuery = ref('')
 const selectedCategory = ref('semua')
 const selectedOrderType = ref('dine-in')
@@ -172,13 +171,12 @@ const paymentModalData = ref({
 const filteredProducts = computed(() => {
   let filtered = products.value
 
-  if (selectedCategory.value !== 'semua') {
+  if (selectedCategory.value !== 'semua')
     filtered = filtered.filter(p => p.category === selectedCategory.value)
-  }
 
   if (searchQuery.value) {
     filtered = filtered.filter(p =>
-      p.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      p.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
     )
   }
 
@@ -186,6 +184,7 @@ const filteredProducts = computed(() => {
 })
 
 const currentTime = ref(new Date())
+
 setInterval(() => {
   currentTime.value = new Date()
 }, 1000)
@@ -216,21 +215,20 @@ const orderSummary = computed(() => {
 })
 
 const productModalTotal = computed(() => {
-  if (!selectedProduct.value) return 0
+  if (!selectedProduct.value)
+    return 0
 
   let total = selectedProduct.value.price * productModalData.value.quantity
 
-  if (productModalData.value.selectedVariant?.price) {
+  if (productModalData.value.selectedVariant?.price)
     total += productModalData.value.selectedVariant.price * productModalData.value.quantity
-  }
 
   productModalData.value.selectedToppings.forEach(topping => {
     total += topping.price * productModalData.value.quantity
   })
 
-  if (productModalData.value.hasDiscount) {
+  if (productModalData.value.hasDiscount)
     total -= productModalData.value.discountAmount
-  }
 
   return total
 })
@@ -259,11 +257,10 @@ const openProductModal = (product: any) => {
 
 const toggleTopping = (topping: any) => {
   const index = productModalData.value.selectedToppings.findIndex(t => t.id === topping.id)
-  if (index >= 0) {
+  if (index >= 0)
     productModalData.value.selectedToppings.splice(index, 1)
-  } else {
+  else
     productModalData.value.selectedToppings.push(topping)
-  }
 }
 
 const addToOrder = () => {
@@ -299,16 +296,17 @@ const updateOrderQuantity = (index: number, delta: number) => {
 }
 
 const openPaymentModal = () => {
-  if (orderItems.value.length === 0) return
+  if (orderItems.value.length === 0)
+    return
   showPaymentModal.value = true
 }
 
 const generateOrderId = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   let result = '#'
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 7; i++)
     result += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
+
   return result
 }
 
@@ -322,13 +320,13 @@ const processPayment = () => {
     paymentMethod: paymentModalData.value.paymentMethod,
     timestamp: new Date(),
   }
-  
+
   currentOrderId.value = completedOrder.value.orderId
-  
+
   // Close payment modal and show success modal
   showPaymentModal.value = false
   showSuccessModal.value = true
-  
+
   // Clear order items
   orderItems.value = []
 }
@@ -356,137 +354,12 @@ const closeSuccessModal = () => {
   showSuccessModal.value = false
   completedOrder.value = null
 }
-
-const goToBeranda = () => {
-  router.push('/pos/beranda')
-}
-
-const goToTransaksi = () => {
-  router.push('/pos/transaksi')
-}
 </script>
 
 <template>
   <div class="pos-product-page">
-    <!-- Sidebar -->
-    <div class="pos-sidebar">
-      <div class="sidebar-header">
-        <VAvatar
-          size="48"
-          color="primary"
-          class="mb-2"
-        >
-          <VIcon
-            icon="tabler-building-store"
-            size="28"
-          />
-        </VAvatar>
-      </div>
+    <PosSidebar active-page="pos" />
 
-      <div class="sidebar-menu">
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-              @click="goToBeranda"
-            >
-              <VIcon icon="tabler-home" />
-            </VBtn>
-          </template>
-          <span>Beranda</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="flat"
-              color="primary"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-receipt" />
-            </VBtn>
-          </template>
-          <span>POS</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-              @click="goToTransaksi"
-            >
-              <VIcon icon="tabler-list" />
-            </VBtn>
-          </template>
-          <span>Transaksi</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-package" />
-            </VBtn>
-          </template>
-          <span>Pengeluaran</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-box" />
-            </VBtn>
-          </template>
-          <span>Produk</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-settings" />
-            </VBtn>
-          </template>
-          <span>Settings</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-user" />
-            </VBtn>
-          </template>
-          <span>Profil</span>
-        </VTooltip>
-      </div>
-    </div>
-
-    <!-- Main Content -->
     <div class="pos-main">
       <!-- Header -->
       <div class="pos-header">
@@ -708,7 +581,7 @@ const goToTransaksi = () => {
                       <p class="text-body-2 font-weight-bold text-primary mb-2">
                         {{ formatCurrency(item.totalPrice) }}
                       </p>
-                      
+
                       <div class="d-flex align-center gap-2">
                         <VBtn
                           icon
@@ -1411,31 +1284,6 @@ const goToTransaksi = () => {
   display: flex;
   min-height: 100vh;
   background-color: #f5f5f9;
-}
-
-.pos-sidebar {
-  width: 72px;
-  background: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
-
-  .sidebar-header {
-    margin-bottom: 2rem;
-  }
-
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
 }
 
 .pos-main {

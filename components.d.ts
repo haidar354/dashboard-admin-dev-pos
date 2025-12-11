@@ -59,6 +59,7 @@ declare module 'vue' {
     MultipleImageUploadCard: typeof import('./src/components/MultipleImageUploadCard.vue')['default']
     Notifications: typeof import('./src/@core/components/Notifications.vue')['default']
     PaymentProvidersDialog: typeof import('./src/components/dialogs/PaymentProvidersDialog.vue')['default']
+    PosSidebar: typeof import('./src/components/pos/PosSidebar.vue')['default']
     PricingPlanDialog: typeof import('./src/components/dialogs/PricingPlanDialog.vue')['default']
     ProductDescriptionEditor: typeof import('./src/@core/components/ProductDescriptionEditor.vue')['default']
     ProductImageUploadCard: typeof import('./src/components/ProductImageUploadCard.vue')['default']

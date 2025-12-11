@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import PosSidebar from '../components/PosSidebar.vue'
 
 definePage({
   meta: {
@@ -8,7 +8,6 @@ definePage({
   },
 })
 
-const router = useRouter()
 const searchQuery = ref('')
 const selectedFilter = ref('semua')
 const expandedTransactions = ref<number[]>([])
@@ -268,14 +267,13 @@ const stats = ref([
 const filteredTransactions = computed(() => {
   let filtered = transactions.value
 
-  if (selectedFilter.value !== 'semua') {
+  if (selectedFilter.value !== 'semua')
     filtered = filtered.filter(t => t.type === selectedFilter.value)
-  }
 
   if (searchQuery.value) {
     filtered = filtered.filter(t =>
-      t.orderId.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      t.customerName.toLowerCase().includes(searchQuery.value.toLowerCase())
+      t.orderId.toLowerCase().includes(searchQuery.value.toLowerCase())
+      || t.customerName.toLowerCase().includes(searchQuery.value.toLowerCase()),
     )
   }
 
@@ -292,11 +290,10 @@ const formatCurrency = (amount: number) => {
 
 const toggleExpand = (transactionId: number) => {
   const index = expandedTransactions.value.indexOf(transactionId)
-  if (index >= 0) {
+  if (index >= 0)
     expandedTransactions.value.splice(index, 1)
-  } else {
+  else
     expandedTransactions.value.push(transactionId)
-  }
 }
 
 const isExpanded = (transactionId: number) => {
@@ -333,135 +330,11 @@ const getTypeIcon = (type: string) => {
     default: return 'tabler-receipt'
   }
 }
-
-const goToPOS = () => {
-  router.push('/pos/posProduct')
-}
-
-const goToBeranda = () => {
-  router.push('/pos/beranda')
-}
 </script>
 
 <template>
   <div class="transaction-page">
-    <!-- Sidebar -->
-    <div class="pos-sidebar">
-      <div class="sidebar-header">
-        <VAvatar
-          size="48"
-          color="primary"
-          class="mb-2"
-        >
-          <VIcon
-            icon="tabler-building-store"
-            size="28"
-          />
-        </VAvatar>
-      </div>
-
-      <div class="sidebar-menu">
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-              @click="goToBeranda"
-            >
-              <VIcon icon="tabler-home" />
-            </VBtn>
-          </template>
-          <span>Beranda</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-              @click="goToPOS"
-            >
-              <VIcon icon="tabler-receipt" />
-            </VBtn>
-          </template>
-          <span>POS</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="flat"
-              color="primary"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-list" />
-            </VBtn>
-          </template>
-          <span>Transaksi</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-package" />
-            </VBtn>
-          </template>
-          <span>Pengeluaran</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-box" />
-            </VBtn>
-          </template>
-          <span>Produk</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-settings" />
-            </VBtn>
-          </template>
-          <span>Settings</span>
-        </VTooltip>
-
-        <VTooltip location="end">
-          <template #activator="{ props }">
-            <VBtn
-              icon
-              variant="text"
-              color="default"
-              v-bind="props"
-            >
-              <VIcon icon="tabler-user" />
-            </VBtn>
-          </template>
-          <span>Profil</span>
-        </VTooltip>
-      </div>
-    </div>
+    <PosSidebar active-page="transaksi" />
 
     <!-- Main Content -->
     <div class="transaction-main">
@@ -735,31 +608,6 @@ const goToBeranda = () => {
   display: flex;
   min-height: 100vh;
   background-color: #f5f5f9;
-}
-
-.pos-sidebar {
-  width: 72px;
-  background: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 100;
-
-  .sidebar-header {
-    margin-bottom: 2rem;
-  }
-
-  .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
 }
 
 .transaction-main {
