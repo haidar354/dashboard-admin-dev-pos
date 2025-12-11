@@ -14,9 +14,13 @@ const selectedCategory = ref('semua')
 const selectedOrderType = ref('dine-in')
 const showProductModal = ref(false)
 const showPaymentModal = ref(false)
+const showSuccessModal = ref(false)
+const showReceiptModal = ref(false)
 const selectedProduct = ref<any>(null)
 const orderItems = ref<any[]>([])
 const promoCode = ref('')
+const currentOrderId = ref('')
+const completedOrder = ref<any>(null)
 
 // Dummy data produk
 const products = ref([
@@ -299,15 +303,66 @@ const openPaymentModal = () => {
   showPaymentModal.value = true
 }
 
+const generateOrderId = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = '#'
+  for (let i = 0; i < 7; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
+}
+
 const processPayment = () => {
-  // Process payment logic here
-  alert('Pembayaran berhasil!')
-  orderItems.value = []
+  // Save completed order
+  completedOrder.value = {
+    orderId: generateOrderId(),
+    items: [...orderItems.value],
+    summary: { ...orderSummary.value },
+    orderType: selectedOrderType.value,
+    paymentMethod: paymentModalData.value.paymentMethod,
+    timestamp: new Date(),
+  }
+  
+  currentOrderId.value = completedOrder.value.orderId
+  
+  // Close payment modal and show success modal
   showPaymentModal.value = false
+  showSuccessModal.value = true
+  
+  // Clear order items
+  orderItems.value = []
+}
+
+const printReceipt = () => {
+  showSuccessModal.value = false
+  showReceiptModal.value = true
+}
+
+const handlePrint = () => {
+  window.print()
+}
+
+const handleDownloadPDF = () => {
+  // In production, use library like jsPDF
+  alert('Download PDF fitur akan segera tersedia')
+}
+
+const handleShareReceipt = () => {
+  // In production, implement share functionality
+  alert('Share nota fitur akan segera tersedia')
+}
+
+const closeSuccessModal = () => {
+  showSuccessModal.value = false
+  completedOrder.value = null
 }
 
 const goToBeranda = () => {
   router.push('/pos/beranda')
+}
+
+const goToTransaksi = () => {
+  router.push('/pos/transaksi')
 }
 </script>
 
@@ -365,6 +420,7 @@ const goToBeranda = () => {
               variant="text"
               color="default"
               v-bind="props"
+              @click="goToTransaksi"
             >
               <VIcon icon="tabler-list" />
             </VBtn>
@@ -1100,6 +1156,253 @@ const goToBeranda = () => {
         </VCardActions>
       </VCard>
     </VDialog>
+
+    <!-- Success Transaction Modal -->
+    <VDialog
+      v-model="showSuccessModal"
+      max-width="600"
+      persistent
+    >
+      <VCard class="text-center">
+        <VCardTitle class="d-flex align-center justify-space-between">
+          <span class="text-h6">Transaksi Berhasil Dibuat!</span>
+          <VBtn
+            icon
+            variant="text"
+            @click="closeSuccessModal"
+          >
+            <VIcon icon="tabler-x" />
+          </VBtn>
+        </VCardTitle>
+
+        <VCardText class="py-8">
+          <!-- Chef Illustration Placeholder -->
+          <div class="success-illustration mb-6">
+            <VAvatar
+              size="120"
+              color="success"
+              class="mb-4"
+            >
+              <VIcon
+                icon="tabler-chef-hat"
+                size="64"
+                color="white"
+              />
+            </VAvatar>
+          </div>
+
+          <!-- Order ID -->
+          <div class="success-badge mb-4">
+            <VIcon
+              icon="tabler-circle-check"
+              color="success"
+              size="24"
+              class="me-2"
+            />
+            <span class="text-h5 font-weight-bold text-success">
+              {{ currentOrderId }}
+            </span>
+          </div>
+
+          <p class="text-body-1 text-medium-emphasis mb-6">
+            Pembayaran telah diterima dan terkirim ke dapur, cetak nota<br>
+            dan jangan lupa berikan kepada tamu!
+          </p>
+
+          <VBtn
+            color="primary"
+            size="large"
+            block
+            @click="printReceipt"
+          >
+            <VIcon
+              icon="tabler-printer"
+              class="me-2"
+            />
+            Cetak Nota
+          </VBtn>
+        </VCardText>
+      </VCard>
+    </VDialog>
+
+    <!-- Receipt/Nota Modal -->
+    <VDialog
+      v-model="showReceiptModal"
+      max-width="500"
+    >
+      <VCard>
+        <VCardTitle class="d-flex align-center justify-space-between">
+          <span class="text-h6">Nota Pembayaran</span>
+          <VBtn
+            icon
+            variant="text"
+            @click="showReceiptModal = false"
+          >
+            <VIcon icon="tabler-x" />
+          </VBtn>
+        </VCardTitle>
+
+        <VCardText>
+          <div
+            v-if="completedOrder"
+            class="receipt-container"
+          >
+            <!-- Receipt Content -->
+            <div class="receipt-paper">
+              <div class="receipt-header text-center mb-4">
+                <h3 class="text-h6 font-weight-bold mb-1">
+                  Teknoreka Chicken
+                </h3>
+                <p class="text-caption text-medium-emphasis mb-0">
+                  Jl. Gejayan No. 45, Yogyakarta
+                </p>
+                <p class="text-caption text-medium-emphasis">
+                  Telp: (0274) 123456
+                </p>
+              </div>
+
+              <VDivider class="my-3" />
+
+              <div class="receipt-info mb-3">
+                <div class="d-flex justify-space-between mb-1">
+                  <span class="text-caption">Tanggal</span>
+                  <span class="text-caption font-weight-bold">
+                    {{ new Date().toLocaleDateString('id-ID') }} - {{ new Date().toLocaleTimeString('id-ID') }}
+                  </span>
+                </div>
+                <div class="d-flex justify-space-between mb-1">
+                  <span class="text-caption">Order ID</span>
+                  <span class="text-caption font-weight-bold">{{ completedOrder.orderId }}</span>
+                </div>
+                <div class="d-flex justify-space-between">
+                  <span class="text-caption">Customer</span>
+                  <span class="text-caption font-weight-bold">Tamu</span>
+                </div>
+              </div>
+
+              <VDivider class="my-3" />
+
+              <!-- Order Items -->
+              <div class="receipt-items mb-3">
+                <div
+                  v-for="(item, index) in completedOrder.items"
+                  :key="index"
+                  class="mb-3"
+                >
+                  <div class="text-body-2 font-weight-bold mb-1">
+                    {{ item.name }}
+                  </div>
+                  <div
+                    v-if="item.variant"
+                    class="text-caption text-medium-emphasis mb-1"
+                  >
+                    Varian: {{ item.variant.name }}
+                  </div>
+                  <div
+                    v-if="item.toppings.length > 0"
+                    class="text-caption text-medium-emphasis mb-1"
+                  >
+                    Topping: {{ item.toppings.map((t: any) => t.name).join(', ') }}
+                  </div>
+                  <div class="d-flex justify-space-between">
+                    <span class="text-caption">{{ item.quantity }}x @ {{ formatCurrency(item.basePrice) }}</span>
+                    <span class="text-caption font-weight-bold">{{ formatCurrency(item.totalPrice) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <VDivider class="my-3" />
+
+              <!-- Summary -->
+              <div class="receipt-summary">
+                <div class="d-flex justify-space-between mb-1">
+                  <span class="text-caption">Subtotal</span>
+                  <span class="text-caption">{{ formatCurrency(completedOrder.summary.subtotal) }}</span>
+                </div>
+                <div class="d-flex justify-space-between mb-1">
+                  <span class="text-caption">Diskon</span>
+                  <span class="text-caption">{{ formatCurrency(completedOrder.summary.discount) }}</span>
+                </div>
+                <div class="d-flex justify-space-between mb-1">
+                  <span class="text-caption">PPN (10%)</span>
+                  <span class="text-caption">{{ formatCurrency(completedOrder.summary.ppn) }}</span>
+                </div>
+                <div class="d-flex justify-space-between mb-2">
+                  <span class="text-caption">Pembulatan</span>
+                  <span class="text-caption">{{ formatCurrency(completedOrder.summary.rounding) }}</span>
+                </div>
+                <VDivider class="my-2" />
+                <div class="d-flex justify-space-between">
+                  <span class="text-body-1 font-weight-bold">Total</span>
+                  <span class="text-body-1 font-weight-bold">{{ formatCurrency(completedOrder.summary.total) }}</span>
+                </div>
+              </div>
+
+              <VDivider class="my-3" />
+
+              <div class="receipt-footer text-center">
+                <p class="text-caption mb-2">
+                  Tunai: {{ formatCurrency(completedOrder.summary.total) }}
+                </p>
+                <p class="text-caption mb-2">
+                  Kembalian: {{ formatCurrency(0) }}
+                </p>
+                <p class="text-caption font-weight-bold mt-4">
+                  Terima Kasih
+                </p>
+                <p class="text-caption text-medium-emphasis">
+                  Pembelian Anda gratis jika tidak diberi struk
+                </p>
+              </div>
+            </div>
+          </div>
+        </VCardText>
+
+        <VCardActions class="pa-4">
+          <VRow>
+            <VCol cols="4">
+              <VBtn
+                variant="outlined"
+                block
+                @click="handlePrint"
+              >
+                <VIcon
+                  icon="tabler-printer"
+                  class="me-2"
+                />
+                Print
+              </VBtn>
+            </VCol>
+            <VCol cols="4">
+              <VBtn
+                variant="outlined"
+                block
+                @click="handleDownloadPDF"
+              >
+                <VIcon
+                  icon="tabler-download"
+                  class="me-2"
+                />
+                PDF
+              </VBtn>
+            </VCol>
+            <VCol cols="4">
+              <VBtn
+                variant="outlined"
+                block
+                @click="handleShareReceipt"
+              >
+                <VIcon
+                  icon="tabler-share"
+                  class="me-2"
+                />
+                Share
+              </VBtn>
+            </VCol>
+          </VRow>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </div>
 </template>
 
@@ -1255,5 +1558,44 @@ const goToBeranda = () => {
 .toppings-list {
   max-height: 200px;
   overflow-y: auto;
+}
+
+.success-illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.success-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.receipt-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.receipt-paper {
+  background: white;
+  padding: 1.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.receipt-header,
+.receipt-info,
+.receipt-items,
+.receipt-summary,
+.receipt-footer {
+  line-height: 1.6;
+}
+
+@media print {
+  .receipt-paper {
+    width: 80mm;
+    padding: 10mm;
+  }
 }
 </style>

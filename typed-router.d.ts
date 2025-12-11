@@ -47,6 +47,7 @@ declare module 'vue-router/auto-routes' {
     'pos-cashiers-pin': RouteRecordInfo<'pos-cashiers-pin', '/pos/cashiers/pin', Record<never, never>, Record<never, never>>,
     'pos-outlets': RouteRecordInfo<'pos-outlets', '/pos/outlets', Record<never, never>, Record<never, never>>,
     'pos-pos-product': RouteRecordInfo<'pos-pos-product', '/pos/posProduct', Record<never, never>, Record<never, never>>,
+    'pos-transaksi': RouteRecordInfo<'pos-transaksi', '/pos/transaksi', Record<never, never>, Record<never, never>>,
     'product-dashboard': RouteRecordInfo<'product-dashboard', '/product/dashboard', Record<never, never>, Record<never, never>>,
     'product-item-categories': RouteRecordInfo<'product-item-categories', '/product/item-categories', Record<never, never>, Record<never, never>>,
     'product-item-modifiers': RouteRecordInfo<'product-item-modifiers', '/product/item-modifiers', Record<never, never>, Record<never, never>>,
