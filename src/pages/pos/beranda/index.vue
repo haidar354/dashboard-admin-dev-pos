@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 definePage({
@@ -28,9 +28,9 @@ const formattedTime = computed(() => {
 const formattedDate = computed(() => {
   return currentTime.value.toLocaleDateString('id-ID', { 
     weekday: 'long', 
-    year: 'numeric', 
+    day: 'numeric',
     month: 'long', 
-    day: 'numeric' 
+    year: 'numeric' 
   })
 })
 
@@ -43,6 +43,44 @@ const formattedCash = computed(() => {
   }).format(parseInt(currentShift.value.startCash))
 })
 
+// Dummy data statistik
+const stats = ref({
+  shiftSales: 24100000,
+  cash: 20000000,
+  qr: 4000000,
+  edc: 100000,
+  dineIn: 20000000,
+  takeAway: 4000000,
+  online: 100000,
+})
+
+// Dummy data produk terlaris
+const topProducts = ref([
+  {
+    id: 1,
+    name: 'Nasi Ayam Utuh Hot Nashville + Es Manis..',
+    price: 15000,
+    originalPrice: 25000,
+    image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400&h=300&fit=crop',
+    stock: 12,
+  },
+  {
+    id: 2,
+    name: 'Paket Dada Hot Nashville',
+    price: 15000,
+    image: 'https://images.unsplash.com/photo-1633504581786-316c8002b1b9?w=400&h=300&fit=crop',
+    stock: 12,
+  },
+])
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(amount)
+}
+
 const logout = () => {
   // Clear shift data
   localStorage.removeItem('currentShift')
@@ -53,391 +91,551 @@ const logout = () => {
   router.push('/pos')
 }
 
+const goToPOS = () => {
+  router.push('/pos/posProduct')
+}
+
 onMounted(() => {
   // Load current shift data
   const shift = localStorage.getItem('currentShift')
   
   if (shift) {
     currentShift.value = JSON.parse(shift)
-  } else {
-    // Jika tidak ada shift aktif, redirect ke halaman pilih outlet
-    router.push('/pos')
   }
 })
 </script>
 
 <template>
   <div class="pos-beranda">
-    <!-- Header -->
-    <div class="pos-header">
-      <VContainer fluid>
-        <div class="d-flex align-center justify-space-between">
-          <div class="d-flex align-center">
-            <VAvatar
-              size="48"
-              color="primary"
-              class="me-3"
-            >
-              <VIcon
-                icon="tabler-building-store"
-                size="28"
-              />
-            </VAvatar>
-            <div>
-              <h2 class="text-h6 font-weight-bold">
-                {{ currentShift?.outlet?.name || 'Teknoreka Chicken' }}
-              </h2>
-              <p class="text-caption text-medium-emphasis mb-0">
-                {{ currentShift?.cashier?.name || 'Kasir' }} - {{ formattedDate }}
-              </p>
-            </div>
-          </div>
-          <div class="d-flex align-center gap-3">
-            <div class="text-end me-4">
-              <p class="text-h5 font-weight-bold mb-0">
-                {{ formattedTime }}
-              </p>
-              <p class="text-caption text-medium-emphasis">
-                Shift Aktif
-              </p>
-            </div>
+    <!-- Sidebar -->
+    <div class="pos-sidebar">
+      <div class="sidebar-header">
+        <VAvatar
+          size="48"
+          color="primary"
+          class="mb-2"
+        >
+          <VIcon
+            icon="tabler-building-store"
+            size="28"
+          />
+        </VAvatar>
+      </div>
+
+      <div class="sidebar-menu">
+        <VTooltip location="end">
+          <template #activator="{ props }">
             <VBtn
-              color="error"
-              variant="outlined"
-              @click="logout"
+              icon
+              variant="flat"
+              color="primary"
+              v-bind="props"
             >
-              <VIcon
-                icon="tabler-logout"
-                class="me-2"
-              />
-              Keluar
+              <VIcon icon="tabler-home" />
             </VBtn>
-          </div>
-        </div>
-      </VContainer>
+          </template>
+          <span>Beranda</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+              @click="goToPOS"
+            >
+              <VIcon icon="tabler-receipt" />
+            </VBtn>
+          </template>
+          <span>POS</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+            >
+              <VIcon icon="tabler-list" />
+            </VBtn>
+          </template>
+          <span>Transaksi</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+            >
+              <VIcon icon="tabler-package" />
+            </VBtn>
+          </template>
+          <span>Pengeluaran</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+            >
+              <VIcon icon="tabler-box" />
+            </VBtn>
+          </template>
+          <span>Produk</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+            >
+              <VIcon icon="tabler-settings" />
+            </VBtn>
+          </template>
+          <span>Settings</span>
+        </VTooltip>
+
+        <VTooltip location="end">
+          <template #activator="{ props }">
+            <VBtn
+              icon
+              variant="text"
+              color="default"
+              v-bind="props"
+            >
+              <VIcon icon="tabler-user" />
+            </VBtn>
+          </template>
+          <span>Profil</span>
+        </VTooltip>
+      </div>
     </div>
 
     <!-- Main Content -->
-    <VContainer
-      fluid
-      class="py-8"
-    >
-      <!-- Stats Cards -->
-      <VRow class="mb-6">
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard class="stat-card">
-            <VCardText>
-              <div class="d-flex align-center justify-space-between">
-                <div>
-                  <p class="text-caption text-medium-emphasis mb-1">
-                    Saldo Awal
-                  </p>
-                  <h3 class="text-h5 font-weight-bold">
-                    {{ formattedCash }}
-                  </h3>
-                </div>
-                <VAvatar
-                  color="primary"
-                  variant="tonal"
-                  size="48"
-                >
-                  <VIcon
-                    icon="tabler-cash"
-                    size="28"
-                  />
-                </VAvatar>
-              </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard class="stat-card">
-            <VCardText>
-              <div class="d-flex align-center justify-space-between">
-                <div>
-                  <p class="text-caption text-medium-emphasis mb-1">
-                    Transaksi Hari Ini
-                  </p>
-                  <h3 class="text-h5 font-weight-bold">
-                    0
-                  </h3>
-                </div>
-                <VAvatar
-                  color="success"
-                  variant="tonal"
-                  size="48"
-                >
-                  <VIcon
-                    icon="tabler-shopping-cart"
-                    size="28"
-                  />
-                </VAvatar>
-              </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard class="stat-card">
-            <VCardText>
-              <div class="d-flex align-center justify-space-between">
-                <div>
-                  <p class="text-caption text-medium-emphasis mb-1">
-                    Total Penjualan
-                  </p>
-                  <h3 class="text-h5 font-weight-bold">
-                    Rp 0
-                  </h3>
-                </div>
-                <VAvatar
-                  color="warning"
-                  variant="tonal"
-                  size="48"
-                >
-                  <VIcon
-                    icon="tabler-chart-line"
-                    size="28"
-                  />
-                </VAvatar>
-              </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard class="stat-card">
-            <VCardText>
-              <div class="d-flex align-center justify-space-between">
-                <div>
-                  <p class="text-caption text-medium-emphasis mb-1">
-                    Durasi Shift
-                  </p>
-                  <h3 class="text-h5 font-weight-bold">
-                    {{ Math.floor((new Date().getTime() - new Date(currentShift?.startTime || new Date()).getTime()) / 60000) }} menit
-                  </h3>
-                </div>
-                <VAvatar
-                  color="info"
-                  variant="tonal"
-                  size="48"
-                >
-                  <VIcon
-                    icon="tabler-clock"
-                    size="28"
-                  />
-                </VAvatar>
-              </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-      </VRow>
-
-      <!-- Quick Actions -->
-      <VRow class="mb-6">
-        <VCol cols="12">
-          <h3 class="text-h6 font-weight-bold mb-4">
-            Menu Cepat
-          </h3>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard
-            class="action-card text-center pa-6"
-            hover
-          >
+    <div class="pos-main">
+      <!-- Header -->
+      <div class="pos-header">
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
             <VAvatar
-              color="primary"
-              size="64"
-              class="mb-4"
-            >
-              <VIcon
-                icon="tabler-shopping-cart-plus"
-                size="32"
-              />
-            </VAvatar>
-            <h4 class="text-h6 font-weight-bold mb-2">
-              Transaksi Baru
-            </h4>
-            <p class="text-body-2 text-medium-emphasis">
-              Mulai transaksi penjualan baru
-            </p>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard
-            class="action-card text-center pa-6"
-            hover
-          >
-            <VAvatar
-              color="success"
-              size="64"
-              class="mb-4"
-            >
-              <VIcon
-                icon="tabler-list"
-                size="32"
-              />
-            </VAvatar>
-            <h4 class="text-h6 font-weight-bold mb-2">
-              Daftar Transaksi
-            </h4>
-            <p class="text-body-2 text-medium-emphasis">
-              Lihat semua transaksi hari ini
-            </p>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard
-            class="action-card text-center pa-6"
-            hover
-          >
-            <VAvatar
-              color="warning"
-              size="64"
-              class="mb-4"
-            >
-              <VIcon
-                icon="tabler-report-money"
-                size="32"
-              />
-            </VAvatar>
-            <h4 class="text-h6 font-weight-bold mb-2">
-              Laporan Shift
-            </h4>
-            <p class="text-body-2 text-medium-emphasis">
-              Lihat laporan shift kasir
-            </p>
-          </VCard>
-        </VCol>
-        <VCol
-          cols="12"
-          md="3"
-        >
-          <VCard
-            class="action-card text-center pa-6"
-            hover
-          >
-            <VAvatar
-              color="info"
-              size="64"
-              class="mb-4"
-            >
-              <VIcon
-                icon="tabler-settings"
-                size="32"
-              />
-            </VAvatar>
-            <h4 class="text-h6 font-weight-bold mb-2">
-              Pengaturan
-            </h4>
-            <p class="text-body-2 text-medium-emphasis">
-              Atur preferensi POS
-            </p>
-          </VCard>
-        </VCol>
-      </VRow>
-
-      <!-- Recent Transactions -->
-      <VRow>
-        <VCol cols="12">
-          <VCard>
-            <VCardTitle class="d-flex align-center justify-space-between">
-              <span>Transaksi Terakhir</span>
-              <VBtn
-                variant="text"
-                color="primary"
-                size="small"
-              >
-                Lihat Semua
-              </VBtn>
-            </VCardTitle>
-            <VCardText>
-              <div class="text-center py-12">
+              size="56"
+              class="me-3"
+              image="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=100&h=100&fit=crop"
+            />
+            <div>
+              <h2 class="text-h6 font-weight-bold mb-0">
+                Teknoreka Chicken
+              </h2>
+              <p class="text-caption text-medium-emphasis mb-0">
                 <VIcon
-                  icon="tabler-receipt-off"
-                  size="64"
-                  color="grey-lighten-1"
-                  class="mb-4"
+                  icon="tabler-map-pin"
+                  size="14"
+                  class="me-1"
                 />
-                <p class="text-h6 text-medium-emphasis">
-                  Belum ada transaksi
-                </p>
-                <p class="text-body-2 text-medium-emphasis">
-                  Transaksi akan muncul di sini setelah Anda membuat transaksi pertama
-                </p>
-                <VBtn
-                  color="primary"
-                  class="mt-4"
-                >
-                  <VIcon
-                    icon="tabler-plus"
-                    class="me-2"
-                  />
-                  Buat Transaksi
-                </VBtn>
+                Cabang Gejayan
+              </p>
+            </div>
+          </div>
+
+          <div class="d-flex align-center gap-4">
+            <div class="text-end">
+              <p class="text-caption text-medium-emphasis mb-0">
+                {{ formattedDate }}
+              </p>
+              <div class="d-flex align-center">
+                <VAvatar
+                  size="32"
+                  class="me-2"
+                  image="https://i.pravatar.cc/150?img=5"
+                />
+                <div>
+                  <p class="text-body-2 font-weight-bold mb-0">
+                    Putri Salsabilla
+                  </p>
+                  <p class="text-caption text-medium-emphasis mb-0">
+                    Kasir
+                  </p>
+                </div>
               </div>
-            </VCardText>
-          </VCard>
-        </VCol>
-      </VRow>
-    </VContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="pos-content">
+        <VContainer fluid>
+          <!-- Stats Cards - Top Row -->
+          <VRow class="mb-4">
+            <VCol
+              cols="12"
+              md="3"
+            >
+              <VCard class="stat-card stat-card-primary">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        Penjualan Shift Ini
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.shiftSales) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="success"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-currency-dollar"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="3"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        Tunai
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.cash) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="success"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-receipt"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="3"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        QR
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.qr) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="success"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-qrcode"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="3"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        EDC
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.edc) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="success"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-credit-card"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+          </VRow>
+
+          <!-- Stats Cards - Second Row -->
+          <VRow class="mb-6">
+            <VCol
+              cols="12"
+              md="4"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        Dine In
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.dineIn) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="primary"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-tools-kitchen-2"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="4"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        Take Away
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.takeAway) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="warning"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-shopping-bag"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+
+            <VCol
+              cols="12"
+              md="4"
+            >
+              <VCard class="stat-card">
+                <VCardText>
+                  <div class="d-flex align-center justify-space-between">
+                    <div>
+                      <p class="text-caption text-medium-emphasis mb-1">
+                        Online
+                      </p>
+                      <h3 class="text-h5 font-weight-bold">
+                        {{ formatCurrency(stats.online) }}
+                      </h3>
+                    </div>
+                    <VAvatar
+                      color="info"
+                      variant="tonal"
+                      size="56"
+                    >
+                      <VIcon
+                        icon="tabler-device-mobile"
+                        size="32"
+                      />
+                    </VAvatar>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+          </VRow>
+
+          <!-- Top Products Section -->
+          <VRow>
+            <VCol cols="12">
+              <h3 class="text-h6 font-weight-bold mb-4">
+                Chart 5 Kategori terlaris
+              </h3>
+            </VCol>
+
+            <VCol
+              v-for="product in topProducts"
+              :key="product.id"
+              cols="12"
+              sm="6"
+              md="3"
+            >
+              <VCard class="product-card">
+                <div class="product-image-wrapper">
+                  <VImg
+                    :src="product.image"
+                    :alt="product.name"
+                    cover
+                    height="200"
+                  />
+                  <VChip
+                    color="primary"
+                    size="small"
+                    class="stock-badge"
+                  >
+                    {{ product.stock }}
+                  </VChip>
+                </div>
+                <VCardText class="pa-3">
+                  <h4 class="text-body-1 font-weight-bold mb-2">
+                    {{ product.name }}
+                  </h4>
+                  <div class="d-flex align-center gap-2">
+                    <span class="text-h6 font-weight-bold text-primary">
+                      {{ formatCurrency(product.price) }}
+                    </span>
+                    <span
+                      v-if="product.originalPrice"
+                      class="text-caption text-decoration-line-through text-medium-emphasis"
+                    >
+                      {{ formatCurrency(product.originalPrice) }}
+                    </span>
+                  </div>
+                </VCardText>
+              </VCard>
+            </VCol>
+          </VRow>
+        </VContainer>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .pos-beranda {
+  display: flex;
   min-height: 100vh;
   background-color: #f5f5f9;
+}
+
+.pos-sidebar {
+  width: 72px;
+  background: white;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+
+  .sidebar-header {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.pos-main {
+  flex: 1;
+  margin-left: 72px;
+  display: flex;
+  flex-direction: column;
 }
 
 .pos-header {
   background: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  padding: 1rem 0;
+  padding: 1rem 1.5rem;
   position: sticky;
   top: 0;
   z-index: 10;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+.pos-content {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
 .stat-card {
   height: 100%;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  &.stat-card-primary {
+    background: linear-gradient(135deg, #f5f5f9 0%, #fff 100%);
   }
 }
 
-.action-card {
-  height: 100%;
+.product-card {
   cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
+  transition: all 0.2s ease;
   
   &:hover {
-    border-color: rgb(var(--v-theme-primary));
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
+}
+
+.product-image-wrapper {
+  position: relative;
+}
+
+.stock-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 </style>

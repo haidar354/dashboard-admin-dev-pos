@@ -33,8 +33,11 @@ pos/
 │   ├── login.vue            # Login dengan Password
 │   ├── pin.vue              # Login dengan PIN
 │   └── cash.vue             # Input Tunai Laci
-└── beranda/
-    └── index.vue            # POS Dashboard
+├── beranda/
+│   └── index.vue            # POS Dashboard dengan Statistik
+└── posProduct/
+    ├── index.vue            # Halaman POS Utama (Transaksi & Produk)
+    └── README.md            # Dokumentasi detail posProduct
 ```
 
 ---
@@ -52,7 +55,9 @@ pos/
    ↓
 4. [/pos/cashiers/cash] Input Tunai Laci
    ↓
-5. [/pos/beranda] Dashboard POS
+5. [/pos/beranda] Dashboard POS (Statistik & Overview)
+   ↓
+6. [/pos/posProduct] POS Transaksi (Pilih Produk & Checkout)
 ```
 
 ---
@@ -86,12 +91,30 @@ pos/
 - Confirmation checkbox
 - Validation
 
-### ✅ Dashboard POS
-- Real-time clock
-- Shift statistics
-- Quick action cards
-- Transaction list
-- Logout function
+### ✅ Dashboard POS (Beranda)
+- Sidebar navigation
+- Header dengan outlet & kasir info
+- Statistik penjualan shift:
+  - Penjualan Shift Ini
+  - Tunai, QR, EDC
+  - Dine In, Take Away, Online
+- Chart 5 Kategori terlaris
+- Navigation ke halaman POS
+
+### ✅ POS Transaksi (posProduct)
+- Sidebar navigation
+- Header dengan outlet & kasir info
+- Grid produk dengan kategori filter
+- Search produk real-time
+- Panel pesanan dengan order management
+- Modal detail produk:
+  - Pilih varian
+  - Pilih topping
+  - Catatan & diskon
+- Modal konfirmasi pembayaran:
+  - Pilihan metode pembayaran (Tunai, QRIS, EDC)
+  - Ringkasan pembayaran lengkap
+  - Kode promo
 
 ---
 
